@@ -1,0 +1,22 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://contracts.internal/audit/audit-filter.v1.schema.json",
+  "title": "AuditFilter v1",
+  "description": "Shared filter used by the query API and exports. A time range is mandatory (partition pruning). Index chosen by precedence: correlationId > entity > actor > service+action > time.",
+  "type": "object",
+  "required": ["from", "to"],
+  "additionalProperties": false,
+  "properties": {
+    "from": { "type": "string", "format": "date-time", "description": "Inclusive, UTC" },
+    "to":   { "type": "string", "format": "date-time", "description": "Exclusive, UTC. to - from <= 397 days (13 months)." },
+    "services":      { "type": "array", "maxItems": 20, "uniqueItems": true, "items": { "type": "string" } },
+    "actions":       { "type": "array", "maxItems": 50, "uniqueItems": true, "items": { "type": "string" } },
+    "outcomes":      { "type": "array", "uniqueItems": true, "items": { "enum": ["success", "failure", "denied"] } },
+    "actorId":       { "type": "string", "maxLength": 128 },
+    "actorType":     { "enum": ["user", "service", "system", "anonymous"] },
+    "entityType":    { "type": "string", "maxLength": 64 },
+    "entityId":      { "type": "string", "maxLength": 128, "description": "Requires entityType." },
+    "correlationId": { "type": "string", "format": "uuid" }
+  },
+  "dependentRequired": { "entityId": ["entityType"] }
+}

@@ -1,0 +1,12 @@
+{
+  "filter": {
+    "from": "2025-11-06T00:00:00Z",
+    "to": "2026-11-06T15:00:00Z",
+    "entityType": "order",
+    "entityId": "ORD-2026-0048213",
+    "outcomes": ["success", "denied"]
+  },
+  "sort": "occurredAt:desc",
+  "limit": 50,
+  "cursor": "eyJ0IjoiMjAyNi0xMS0wNlQxNDoyMzo1MS40ODI5MTNaIiwiaWQiOiIwMTkzNGYyYSIsImQiOiJkIiwiZiI6ImE3YzMifQ"
+}

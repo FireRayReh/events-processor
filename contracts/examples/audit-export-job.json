@@ -1,0 +1,19 @@
+{
+  "exportId": "01934f30-1111-7aaa-8bbb-cccccccccccc",
+  "status": "completed",
+  "requestedAt": "2026-11-06T15:00:00.000Z",
+  "requestedBy": "usr_8f2a91",
+  "startedAt": "2026-11-06T15:00:02.310Z",
+  "completedAt": "2026-11-06T15:02:47.902Z",
+  "rowsWritten": 912334,
+  "estimatedRows": 915000,
+  "bytesWritten": 41238876,
+  "truncated": false,
+  "downloadUrl": "https://exports.example.internal/audit/01934f30.csv.gz?X-Amz-Expires=900&X-Amz-Signature=abc",
+  "expiresAt": "2026-11-13T15:02:47.902Z",
+  "error": null,
+  "request": {
+    "filter": { "from": "2026-10-01T00:00:00Z", "to": "2026-11-01T00:00:00Z", "services": ["billing-service"] },
+    "format": "csv"
+  }
+}

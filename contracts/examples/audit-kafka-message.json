@@ -1,0 +1,22 @@
+{
+  "topic": "audit.events.v1",
+  "key": "order:ORD-2026-0048213",
+  "headers": {
+    "audit-event-id": "01934f2a-7c3e-7b21-9f4d-2a6c1e8b5d90",
+    "audit-schema-version": "1.0",
+    "content-type": "application/json; charset=utf-8",
+    "traceparent": "00-4bf92f3577b34da6a3ce929d0e0e4736-00f067aa0ba902b7-01",
+    "audit-source-service": "orders-service"
+  },
+  "value": {
+    "eventId": "01934f2a-7c3e-7b21-9f4d-2a6c1e8b5d90",
+    "schemaVersion": "1.0",
+    "occurredAt": "2026-11-06T14:23:51.482913Z",
+    "source": { "service": "orders-service", "environment": "prod" },
+    "actor": { "type": "user", "id": "usr_8f2a91" },
+    "action": { "name": "order.cancelled" },
+    "entity": { "type": "order", "id": "ORD-2026-0048213" },
+    "outcome": "success",
+    "contentHash": "sha256:9c1185a5c5e9fc54612808977ee8f548b2258d31f2a6c5f8e8a3e6c1b0d7a4e2"
+  }
+}

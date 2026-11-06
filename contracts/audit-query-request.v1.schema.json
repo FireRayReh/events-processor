@@ -1,0 +1,16 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://contracts.internal/audit/audit-query-request.v1.schema.json",
+  "title": "Audit list query (GET /api/audit/events)",
+  "description": "JSON form of the query string. Keyset pagination only: no page/offset parameters exist. A cursor is bound to the filter that produced it (filterHash) and is rejected with 400 otherwise.",
+  "type": "object",
+  "required": ["filter"],
+  "additionalProperties": false,
+  "properties": {
+    "filter": { "$ref": "audit-filter.v1.schema.json" },
+    "sort":   { "enum": ["occurredAt:desc", "occurredAt:asc"], "default": "occurredAt:desc" },
+    "limit":  { "type": "integer", "minimum": 1, "maximum": 200, "default": 50 },
+    "cursor": { "type": "string", "maxLength": 512, "description": "Opaque; from nextCursor of the previous page." },
+    "scanCursor": { "type": "string", "maxLength": 512, "description": "Opaque; from a partial response, continues a time-sliced scan." }
+  }
+}

@@ -1,0 +1,119 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://contracts.internal/audit/audit-event.v1.schema.json",
+  "title": "AuditEvent v1",
+  "description": "One business action. Produced by Audit.Client, carried as the Kafka message value on audit.events.v1, stored verbatim in audit_event_detail.event_json. Additive optional fields only within v1; consumers must ignore unknown fields.",
+  "type": "object",
+  "required": ["eventId", "schemaVersion", "occurredAt", "source", "actor", "action", "entity", "outcome", "contentHash"],
+  "additionalProperties": true,
+  "properties": {
+    "eventId": {
+      "description": "UUIDv7 generated once at record time (or UUIDv5 from source.service + idempotencyKey). Stable across every retry; the dedupe key together with occurredAt.",
+      "type": "string",
+      "format": "uuid",
+      "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-[57][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$"
+    },
+    "schemaVersion": { "type": "string", "pattern": "^1\\.[0-9]+$" },
+    "occurredAt": {
+      "description": "UTC, set once at record time, at most 6 fractional digits (MySQL DATETIME(6)). Never re-stamped on retry.",
+      "type": "string",
+      "format": "date-time",
+      "pattern": "^\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}:\\d{2}(\\.\\d{1,6})?Z$"
+    },
+    "idempotencyKey": { "type": "string", "maxLength": 128 },
+    "source": {
+      "type": "object",
+      "required": ["service", "environment"],
+      "additionalProperties": false,
+      "properties": {
+        "service":     { "type": "string", "pattern": "^[a-z][a-z0-9-]{1,63}$" },
+        "version":     { "type": "string", "maxLength": 64 },
+        "instance":    { "type": "string", "maxLength": 128 },
+        "environment": { "type": "string", "enum": ["dev", "test", "staging", "prod"] }
+      }
+    },
+    "actor": {
+      "type": "object",
+      "required": ["type", "id"],
+      "additionalProperties": false,
+      "properties": {
+        "type":        { "type": "string", "enum": ["user", "service", "system", "anonymous"] },
+        "id":          { "type": "string", "minLength": 1, "maxLength": 128, "description": "Pseudonymous, stable subject id. Do not put e-mail addresses here (GDPR erasure vs immutability)." },
+        "displayName": { "type": "string", "maxLength": 256 },
+        "ip":          { "type": "string", "anyOf": [{ "format": "ipv4" }, { "format": "ipv6" }] },
+        "userAgent":   { "type": "string", "maxLength": 512 },
+        "onBehalfOf":  { "type": "string", "maxLength": 128, "description": "Impersonation / delegated access: the subject the actor acted for." }
+      }
+    },
+    "action": {
+      "type": "object",
+      "required": ["name"],
+      "additionalProperties": false,
+      "properties": {
+        "name":     { "type": "string", "pattern": "^[a-z][a-z0-9_]*(\\.[a-z][a-z0-9_]*)+$", "maxLength": 128, "description": "{entity}.{verb-past-tense}, e.g. order.cancelled" },
+        "category": { "type": "string", "enum": ["create", "read", "update", "delete", "auth", "admin", "export", "other"] }
+      }
+    },
+    "entity": {
+      "type": "object",
+      "required": ["type", "id"],
+      "additionalProperties": false,
+      "properties": {
+        "type":        { "type": "string", "pattern": "^[a-z][a-z0-9_]{0,63}$" },
+        "id":          { "type": "string", "minLength": 1, "maxLength": 128 },
+        "displayName": { "type": "string", "maxLength": 256 }
+      }
+    },
+    "outcome": { "type": "string", "enum": ["success", "failure", "denied"] },
+    "reason":  { "type": "string", "maxLength": 1024 },
+    "summary": { "type": "string", "maxLength": 512, "description": "Human-readable one-liner shown in the dashboard list." },
+    "correlation": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "correlationId": { "type": "string", "format": "uuid" },
+        "causationId":   { "type": "string", "format": "uuid", "description": "eventId of the event that caused this one, if any." },
+        "traceId":       { "type": "string", "pattern": "^[0-9a-f]{32}$", "description": "W3C trace-id" },
+        "requestId":     { "type": "string", "maxLength": 128 }
+      }
+    },
+    "changes": {
+      "description": "Field-level diff. Sensitive paths are masked by the library ('***'). Absent for actions without state change.",
+      "oneOf": [
+        {
+          "type": "array",
+          "maxItems": 200,
+          "items": {
+            "type": "object",
+            "required": ["path"],
+            "additionalProperties": false,
+            "properties": {
+              "path":   { "type": "string", "maxLength": 256, "description": "JSON-pointer-like path, e.g. status or lines/0/qty" },
+              "before": {},
+              "after":  {}
+            }
+          }
+        },
+        {
+          "type": "object",
+          "required": ["truncated", "originalSize"],
+          "additionalProperties": false,
+          "properties": {
+            "truncated":    { "const": true },
+            "originalSize": { "type": "integer", "minimum": 0 }
+          }
+        }
+      ]
+    },
+    "metadata": {
+      "type": "object",
+      "maxProperties": 32,
+      "additionalProperties": { "type": "string", "maxLength": 512 }
+    },
+    "contentHash": {
+      "description": "sha256: + hex SHA-256 of the RFC 8785 (JCS) canonical JSON of this event with contentHash removed. Used by hourly seals.",
+      "type": "string",
+      "pattern": "^sha256:[0-9a-f]{64}$"
+    }
+  }
+}

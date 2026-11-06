@@ -1,0 +1,24 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://contracts.internal/audit/audit-export-job.v1.schema.json",
+  "title": "AuditExportJob (GET /api/audit/exports/{exportId})",
+  "type": "object",
+  "required": ["exportId", "status", "requestedAt", "requestedBy", "rowsWritten"],
+  "additionalProperties": false,
+  "properties": {
+    "exportId":     { "type": "string", "format": "uuid" },
+    "status":       { "enum": ["queued", "running", "completed", "failed", "cancelled", "expired"] },
+    "requestedAt":  { "type": "string", "format": "date-time" },
+    "requestedBy":  { "type": "string" },
+    "startedAt":    { "type": ["string", "null"], "format": "date-time" },
+    "completedAt":  { "type": ["string", "null"], "format": "date-time" },
+    "rowsWritten":  { "type": "integer", "minimum": 0 },
+    "estimatedRows":{ "type": ["integer", "null"], "minimum": 0, "description": "From hourly rollups; for the progress bar." },
+    "bytesWritten": { "type": "integer", "minimum": 0 },
+    "truncated":    { "type": "boolean", "description": "True if maxRows or the CSV row cap stopped the export early." },
+    "downloadUrl":  { "type": ["string", "null"], "format": "uri", "description": "Short-lived pre-signed URL (15 min). Re-fetch the job to get a fresh one." },
+    "expiresAt":    { "type": ["string", "null"], "format": "date-time" },
+    "error":        { "type": ["string", "null"] },
+    "request":      { "$ref": "audit-export-request.v1.schema.json" }
+  }
+}

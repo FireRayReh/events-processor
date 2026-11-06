@@ -1,0 +1,13 @@
+{
+  "failedAt": "2026-11-06T14:25:10.511Z",
+  "consumerGroup": "audit-ingestor",
+  "ingestorInstance": "audit-ingestor-2",
+  "attempts": 3,
+  "origin": { "topic": "audit.events.v1", "partition": 7, "offset": 18233411, "key": "order:ORD-1", "headers": { "audit-schema-version": "1.0" } },
+  "error": {
+    "kind": "schema_validation",
+    "message": "1 schema error",
+    "schemaErrors": [ { "instancePath": "/action/name", "message": "does not match pattern" } ]
+  },
+  "originalValueBase64": "eyJldmVudElkIjoiLi4uIn0="
+}

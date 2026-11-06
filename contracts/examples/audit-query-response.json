@@ -1,0 +1,23 @@
+{
+  "items": [
+    {
+      "eventId": "01934f2a-7c3e-7b21-9f4d-2a6c1e8b5d90",
+      "occurredAt": "2026-11-06T14:23:51.482913Z",
+      "ingestedAt": "2026-11-06T14:23:52.120004Z",
+      "service": "orders-service",
+      "action": "order.cancelled",
+      "outcome": "success",
+      "actor": { "type": "user", "id": "usr_8f2a91", "displayName": "J. Rivera" },
+      "entity": { "type": "order", "id": "ORD-2026-0048213" },
+      "summary": "Order #48213 cancelled (was: Paid)",
+      "correlationId": "5b1e0c2d-3f4a-4b6c-8d7e-9f0a1b2c3d4e",
+      "detailUrl": "/api/audit/events/01934f2a-7c3e-7b21-9f4d-2a6c1e8b5d90?occurredAt=2026-11-06T14:23:51.482913Z"
+    }
+  ],
+  "hasMore": true,
+  "nextCursor": "eyJ0IjoiMjAyNi0xMS0wNlQxNDoyMzo1MS40ODI5MTNaIn0",
+  "partial": false,
+  "scannedThrough": null,
+  "scanCursor": null,
+  "dataAsOf": "2026-11-06T14:59:58.000Z"
+}

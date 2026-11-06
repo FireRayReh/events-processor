@@ -1,0 +1,14 @@
+{
+  "eventId": "01934f2b-0a11-7c02-8b3e-55d0f1a2b3c4",
+  "schemaVersion": "1.0",
+  "occurredAt": "2026-11-06T14:24:02.000117Z",
+  "source": { "service": "billing-service", "version": "2.8.0", "environment": "prod" },
+  "actor": { "type": "user", "id": "usr_31c7de", "ip": "2001:db8::7" },
+  "action": { "name": "invoice.refund_attempted", "category": "admin" },
+  "entity": { "type": "invoice", "id": "INV-771204" },
+  "outcome": "denied",
+  "reason": "Missing permission billing:refund",
+  "summary": "Refund on INV-771204 denied",
+  "correlation": { "correlationId": "a0b1c2d3-e4f5-4a6b-8c7d-0e1f2a3b4c5d", "traceId": "0af7651916cd43dd8448eb211c80319c" },
+  "contentHash": "sha256:1f3870be274f6c49b3e31a0c6728957f6c8b2e5d4a1b0c9d8e7f6a5b4c3d2e1f"
+}

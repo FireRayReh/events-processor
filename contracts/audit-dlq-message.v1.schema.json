@@ -1,0 +1,45 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://contracts.internal/audit/audit-dlq-message.v1.schema.json",
+  "title": "Audit DLQ record value (topic audit.events.dlq.v1)",
+  "description": "Wraps a record the ingestor could not store. The original bytes are preserved so it can be replayed after a fix. DLQ depth > 0 pages on-call: these events are not yet in the store.",
+  "type": "object",
+  "required": ["failedAt", "consumerGroup", "origin", "error", "originalValueBase64"],
+  "additionalProperties": false,
+  "properties": {
+    "failedAt":      { "type": "string", "format": "date-time" },
+    "consumerGroup": { "type": "string" },
+    "ingestorInstance": { "type": "string" },
+    "attempts":      { "type": "integer", "minimum": 1 },
+    "origin": {
+      "type": "object",
+      "required": ["topic", "partition", "offset"],
+      "additionalProperties": false,
+      "properties": {
+        "topic":     { "type": "string" },
+        "partition": { "type": "integer", "minimum": 0 },
+        "offset":    { "type": "integer", "minimum": 0 },
+        "key":       { "type": ["string", "null"] },
+        "headers":   { "type": "object", "additionalProperties": { "type": "string" } }
+      }
+    },
+    "error": {
+      "type": "object",
+      "required": ["kind", "message"],
+      "additionalProperties": false,
+      "properties": {
+        "kind":    { "type": "string", "enum": ["deserialization", "schema_validation", "db_constraint", "db_warning", "unknown"] },
+        "message": { "type": "string", "maxLength": 4096 },
+        "schemaErrors": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "required": ["instancePath", "message"],
+            "properties": { "instancePath": { "type": "string" }, "message": { "type": "string" } }
+          }
+        }
+      }
+    },
+    "originalValueBase64": { "type": "string", "contentEncoding": "base64" }
+  }
+}

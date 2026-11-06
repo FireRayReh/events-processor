@@ -1,0 +1,44 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://contracts.internal/audit/audit-query-response.v1.schema.json",
+  "title": "Audit list response",
+  "description": "No total count (would require COUNT(*) over up to 730M rows). Use /api/audit/stats/hourly for totals. 'partial' means the time-boxed scan stopped before covering the whole range.",
+  "type": "object",
+  "required": ["items", "hasMore", "partial"],
+  "additionalProperties": false,
+  "properties": {
+    "items": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["eventId", "occurredAt", "service", "action", "outcome", "actor", "entity"],
+        "additionalProperties": false,
+        "properties": {
+          "eventId":    { "type": "string", "format": "uuid" },
+          "occurredAt": { "type": "string", "format": "date-time" },
+          "ingestedAt": { "type": "string", "format": "date-time" },
+          "service":    { "type": "string" },
+          "action":     { "type": "string" },
+          "outcome":    { "enum": ["success", "failure", "denied"] },
+          "actor": {
+            "type": "object", "required": ["type", "id"], "additionalProperties": false,
+            "properties": { "type": { "type": "string" }, "id": { "type": "string" }, "displayName": { "type": "string" } }
+          },
+          "entity": {
+            "type": "object", "required": ["type", "id"], "additionalProperties": false,
+            "properties": { "type": { "type": "string" }, "id": { "type": "string" } }
+          },
+          "summary":       { "type": ["string", "null"] },
+          "correlationId": { "type": ["string", "null"], "format": "uuid" },
+          "detailUrl":     { "type": "string", "description": "/api/audit/events/{eventId}?occurredAt=... — full event incl. changes, loaded on demand" }
+        }
+      }
+    },
+    "hasMore":    { "type": "boolean" },
+    "nextCursor": { "type": ["string", "null"] },
+    "partial":    { "type": "boolean" },
+    "scannedThrough": { "type": ["string", "null"], "format": "date-time", "description": "When partial: the scan covered [scannedThrough, to)." },
+    "scanCursor": { "type": ["string", "null"] },
+    "dataAsOf":   { "type": "string", "format": "date-time", "description": "now - replica lag" }
+  }
+}

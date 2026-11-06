@@ -1,0 +1,19 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://contracts.internal/audit/audit-relay-heartbeat.v1.schema.json",
+  "title": "Relay heartbeat (topic audit.relay.heartbeat)",
+  "description": "Published by each outbox relay instance for each closed hour, bucketed by the events' occurredAt hour. Reconciler check per (service, hour): stored_rows >= sum(distinctEventCount) - sum(reclaimedCount). A violation means events are missing and pages on-call. Republished retries can only cause false alarms, never hide a loss.",
+  "type": "object",
+  "required": ["service", "instance", "hour", "publishedCount", "distinctEventCount", "reclaimedCount"],
+  "additionalProperties": false,
+  "properties": {
+    "service":            { "type": "string" },
+    "instance":           { "type": "string" },
+    "hour":               { "type": "string", "format": "date-time", "description": "Start of the occurredAt hour bucket (UTC)." },
+    "publishedCount":     { "type": "integer", "minimum": 0, "description": "Records acked by Kafka, including this instance's own retries." },
+    "distinctEventCount": { "type": "integer", "minimum": 0, "description": "Distinct eventIds acked by this instance." },
+    "reclaimedCount":     { "type": "integer", "minimum": 0, "description": "Of those, rows whose lease had expired from another instance (attempts > 0), so they may also be counted in another instance's heartbeat." },
+    "outboxPending":      { "type": "integer", "minimum": 0 },
+    "outboxOldestAgeSeconds": { "type": "number", "minimum": 0 }
+  }
+}

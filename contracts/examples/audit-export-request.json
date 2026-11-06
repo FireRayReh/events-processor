@@ -1,0 +1,8 @@
+{
+  "filter": { "from": "2026-10-01T00:00:00Z", "to": "2026-11-01T00:00:00Z", "services": ["billing-service"], "actions": ["invoice.refunded"] },
+  "format": "csv",
+  "columns": ["occurredAt", "actorId", "entityId", "outcome", "summary", "reason"],
+  "includeChanges": false,
+  "maxRows": 1000000,
+  "timeZone": "Europe/Berlin"
+}

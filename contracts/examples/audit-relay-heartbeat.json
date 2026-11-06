@@ -1,0 +1,10 @@
+{
+  "service": "orders-service",
+  "instance": "orders-7d9f8-x2k4p",
+  "hour": "2026-11-06T13:00:00Z",
+  "publishedCount": 4127,
+  "distinctEventCount": 4121,
+  "reclaimedCount": 0,
+  "outboxPending": 3,
+  "outboxOldestAgeSeconds": 0.4
+}

@@ -1,0 +1,26 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://contracts.internal/audit/audit-kafka-message.v1.schema.json",
+  "title": "Audit Kafka record (topic audit.events.v1)",
+  "description": "Logical shape of a Kafka record. Only 'value' is the message body; key and headers are set by the outbox relay. Producer: acks=all, enable.idempotence=true, compression=zstd.",
+  "type": "object",
+  "required": ["topic", "key", "headers", "value"],
+  "additionalProperties": false,
+  "properties": {
+    "topic": { "const": "audit.events.v1" },
+    "key":   { "type": "string", "maxLength": 200, "description": "{entity.type}:{entity.id} — per-entity ordering" },
+    "headers": {
+      "type": "object",
+      "required": ["audit-event-id", "audit-schema-version", "content-type"],
+      "additionalProperties": { "type": "string" },
+      "properties": {
+        "audit-event-id":       { "type": "string", "format": "uuid" },
+        "audit-schema-version": { "type": "string", "pattern": "^1\\.[0-9]+$" },
+        "content-type":         { "const": "application/json; charset=utf-8" },
+        "traceparent":          { "type": "string", "pattern": "^[0-9a-f]{2}-[0-9a-f]{32}-[0-9a-f]{16}-[0-9a-f]{2}$" },
+        "audit-source-service": { "type": "string" }
+      }
+    },
+    "value": { "$ref": "audit-event.v1.schema.json" }
+  }
+}
